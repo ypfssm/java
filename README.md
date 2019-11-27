@@ -1,2 +1,2 @@
-# java-concurrent
-Java 并发相关的代码 demo.
+# java
+Java 相关的代码 demo.
