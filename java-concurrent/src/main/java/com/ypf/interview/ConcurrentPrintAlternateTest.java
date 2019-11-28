@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * 参考链接：https://juejin.im/post/5c89b9515188257e5b2befdd
  * @author shuaifei
  */
-public class PrintAlternateConcurrently {
+public class ConcurrentPrintAlternateTest {
 
     private static int result = 0;
     private static final int N = 3;
@@ -25,17 +25,24 @@ public class PrintAlternateConcurrently {
      *      thread1: 4
      *      .....
      *
-     * 解决思路： 每个线程一个信号量，当前线程在执行打印前需先获取上一个线程的信号量，
+     * 解决思路：
+     * 1. 信号量
+     * 每个线程一个信号量，当前线程在执行打印前需先获取上一个线程的信号量，
      * 当前线程打印完毕后释放自己的信号量，从而下一个线程可以获取当前线程的信号量执行打印。
      *
      * 举个例子：假设 N = 3，有三个线程 a,b,c
      * 刚开始初始化信号量状态时， a 、b 的信号量 acquire，c 的信号量处于空闲。从 a 开始执行，由于 a 的上一个线程 c 的信号量是空闲的，
      * 所以 a 可以执行打印，a 做完了打印会释放自己的信号量，也就是 a 做完了通知 b， b 做完了通知 c，.....
      *
+     * 2. Object#wait，Object#notifyAll
+     * 通过取模来判断是不是该自己执行了，如果没有轮到自己执行，则 Object#wait 阻塞释放锁。
+     *
+     * 本方法是采用了信号量的解决思路。
+     *
      * @throws InterruptedException
      */
     @Test
-    public void question1() throws InterruptedException {
+    public void question1ForSemaphore() throws InterruptedException {
         Thread[] threads = new Thread[N];
         Semaphore[] semaphores = new Semaphore[N];
         // 初始化信号量状态
@@ -93,6 +100,7 @@ public class PrintAlternateConcurrently {
          */
         static int value = 0;
 
+        @Override
         public void run() {
 
             while (value <= 100) {
