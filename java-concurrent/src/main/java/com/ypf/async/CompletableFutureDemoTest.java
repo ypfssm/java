@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * thenApply()：在两个任务 A、B 中，任务 B 想要任务 A 计算的结果，且希望 B 执行后返回的 CompletableFuture 中有返回值。
  *
  *
+ * https://juejin.im/post/5ca47aa0e51d457131257269#heading-14
+ *
  * @author shuaifei
  */
 public class CompletableFutureDemoTest {
